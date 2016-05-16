@@ -122,29 +122,68 @@ function calculateWords(){
 	$('.fa-info').attr('title',txt);
 }
 
-function startlib(curentlib, settLib) {
-	$('#main .node-form').prepend($('#edit-field-elem-0-value').val());
-	
+function showDialogAddWord(){
+	if($("#windowAddW").length==0){
+		$('body').append('<dialog id="windowAddW" style="z-index:22;position:fixed;"><h3>Добавьте слова в виде JSON [{"r":"Абрикос","e":"Apricot"},...]!</h3><p><textarea rows="10" style="width: 100%;" id="newWords"></textarea></p><button id="butaddWords">Добавить</dialog><button id="butclosewindowAddW">Отмена</dialog>');
+		$('#butclosewindowAddW').on('click',function(){$("#windowAddW")[0].close();});
+		$('#butaddWords').on('click',function(){var wordsEl = JSON.parse($('#newWords').val());if(wordsEl.length>0){addWords(wordsEl);};$("#windowAddW")[0].close();});
+	}
+	$("#windowAddW")[0].show();
+}
+
+function addWords(curentlib){
+	if(curentlib!=null && $(curentlib).length>0){
 	var elEx = $('.exampleEl').html();
 	var reReplacePatternRu = /rusword/g;
 	var reReplacePatternEn = /enword/g;
 	
-	$(curentlib).each(function (ind, el) {
-		var t = elEx.replace(/rusword/g, el.r);
-		t=t.replace(/enword/g, el.e);
-		t = $(t);
-		$('.wordsEl').append(t);
-		if(el.rc!=null){			
-			if(el.rc=="1"){
-				t.find('.input-group2').addClass('elclose').css('width', '1px');
-				t.find('.input-group2').find('.fa-arrow-right').removeClass('fa-arrow-right').addClass('fa-arrow-left');
+	$(curentlib).each(function (ind, el) {		
+			if(el.r=='rusword') return true;
+			var t = elEx.replace(/rusword/g, el.r);
+			t=t.replace(/enword/g, el.e);	
+			t = $(t);
+			$('.wordsEl').append(t);
+			if(el.rc!=null){			
+				if(el.rc=="1"){
+					t.find('.input-group2').addClass('elclose').css('width', '1px');
+					t.find('.input-group2').find('.fa-arrow-right').removeClass('fa-arrow-right').addClass('fa-arrow-left');
+				}
+				if(el.ec=="1"){
+					t.find('.input-group').addClass('elclose').css('width', '1px');
+					t.find('.input-group').find('.fa-arrow-left').removeClass('fa-arrow-left').addClass('fa-arrow-right');
+				}
 			}
-			if(el.ec=="1"){
-				t.find('.input-group').addClass('elclose').css('width', '1px');
-				t.find('.input-group').find('.fa-arrow-left').removeClass('fa-arrow-left').addClass('fa-arrow-right');
-			}
-		}
+			t.addClass('newheadline');		
 	})
+	
+	$('.wordsEl .newheadline .input-group .fashowinput').on('click', function(ev){closeOpenEl($(ev.target),"r")});
+	$('.wordsEl .newheadline .input-group2 .fashowinput').on('click', function(ev){closeOpenEl($(ev.target),"l")});
+	
+	$('.newheadline .fa-times').parent().on('click', function () {
+	  var thisEl = $(this).parents('div.row');
+	  var idel = thisEl.find('input:hidden').val();
+	 // $.ajax({method : "GET",url : "/new/profile/del/word/" + idel + "/" + $('input[name=dic_id]:first').val() + "/"}).done(function (msg) {thisEl.remove();});
+	  thisEl.remove();	 
+    });
+	
+	$('.newheadline .checkSh').on('change', function () {
+		if ($('.checkSh:checked').length > 0) {
+			$('.shuffler input').prop("checked", "checked");
+			$('.shuffler label span').text("Снять выделение.");
+		} else {
+			$('.shuffler input').prop("checked", "");
+			$('.shuffler label span').text("Выделить все.");
+		}
+	});
+	
+	console.log("removeClass(newheadline)");
+	$('.newheadline').removeClass('newheadline');
+	}
+}
+
+function startlib(curentlib, settLib) {
+	$('#main .node-form').prepend($('#edit-field-elem-0-value').val());
+	addWords(curentlib);	
 	
 	$('.hideEng').on('click', function () {
 		if ($('.hideEng .fa-angle-double-left').length > 0) {
@@ -169,35 +208,24 @@ function startlib(curentlib, settLib) {
 			$('.shuffler label span').text("Снять выделение.");
 		}
 	});
-	$('.headline').nextAll('.row[id][id!=endlist]').find('.input-group2').prepend('<input type="checkbox" class="checkSh"/>');
-	$('body').append('<div style="display:block;height:300px;width:60px;left:20px;top:160px;z-index:21;position:fixed;font-size: smaller;"><div style="padding:10px 10px;"><i class="fa fa-random" style="width: 40px;font-size: 22px;"/></div><div style="padding:10px 10px;"><i class="fa fa-level-down" style="width: 40px;font-size: 22px;"/></div><div style="padding:10px 10px;"><i class="fa fa-external-link" style="width: 40px;font-size: 22px;"/></div><div style="padding:10px 10px;"><i class="fa fa-save" style="width: 40px;font-size: 22px;"/></div><div style="padding:10px 10px;"><i class="fa fa-info" style="width: 40px;font-size: 22px;"/></div></div>');
+	
+	$('body').append('<div style="display:block;height:300px;width:60px;left:20px;top:160px;z-index:21;position:fixed;font-size: smaller;"><div style="padding:10px 10px;"><i class="fa fa-random" style="width: 40px;font-size: 22px;"/></div><div style="padding:10px 10px;"><i class="fa fa-level-down" style="width: 40px;font-size: 22px;"/></div><div style="padding:10px 10px;"><i class="fa fa-external-link" style="width: 40px;font-size: 22px;"/></div><div style="padding:10px 10px;"><i class="fa fa-plus" style="width: 40px;font-size: 22px;"/></div><div style="padding:10px 10px;"><i class="fa fa-save" style="width: 40px;font-size: 22px;"/></div><div style="padding:10px 10px;"><i class="fa fa-info" style="width: 40px;font-size: 22px;"/></div></div>');
 	$('.fa-random').on('click', function () {
 		$('.checkSh:checked').parents('.row').shuffle();
 	});
 	$('.fa-level-down').on('click', function () {
 		$('.checkSh:checked').parents('.row').insertBefore($('.checkSh:checked:last').parents('.row').next());
 	});
-	$('.checkSh').on('change', function () {
-		if ($('.checkSh:checked').length > 0) {
-			$('.shuffler input').prop("checked", "checked");
-			$('.shuffler label span').text("Снять выделение.");
-		} else {
-			$('.shuffler input').prop("checked", "");
-			$('.shuffler label span').text("Выделить все.");
-		}
-	});
+	
 	$('.fa-external-link').on('click', function () {
 		var d = JSON.stringify(getAllSelWords());
 		console.log(d);
 	});
-	
-	$('.fa-times').parent().on('click', function () {
-	  var thisEl = $(this).parents('div.row');
-	  var idel = thisEl.find('input:hidden').val();
-	 // $.ajax({method : "GET",url : "/new/profile/del/word/" + idel + "/" + $('input[name=dic_id]:first').val() + "/"}).done(function (msg) {thisEl.remove();});
-	  thisEl.remove();	 
-    });
-	
+	$('.fa-plus').on('click', function () {
+		console.log("call showDialogAddWord");
+		showDialogAddWord();		
+	});
+		
 	$('.fa-save').on('click', function () {
 		$('#main #edit-submit').click();
 	});
@@ -213,9 +241,6 @@ function startlib(curentlib, settLib) {
 		console.log('I save it');
 		return true;
 	}
-	
-	$('.wordsEl .input-group .fashowinput').on('click', function(ev){closeOpenEl($(ev.target),"r")});
-	$('.wordsEl .input-group2 .fashowinput').on('click', function(ev){closeOpenEl($(ev.target),"l")});
 	
 	$(window).resize(function () {
 		if ($('.hideEng .fa-angle-double-left').length > 0 && !$('.input-group').hasClass('elclose')) {
