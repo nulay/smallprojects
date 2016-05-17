@@ -30,11 +30,11 @@ function _getListOb(arrEl){
 	return listOb;
 }
 function getAllSelWords(){
-	return _getListOb($('#main .checkSh:checked').parent().parent().parent());
+	return _getListOb($('.wordsEl .checkSh:checked').parent().parent().parent());
 }
 
 function getCurentStateDictionary(){
-	return _getListOb($('#main .wordsEl .input-group2').parent().parent());
+	return _getListOb($('.wordsEl .input-group2').parent().parent());
 }
 
 var prStr = {"statePr" : "STATE_MENU", "curentlib" : null, "yoursLib": null }
@@ -131,6 +131,15 @@ function showDialogAddWord(){
 	$("#windowAddW")[0].show();
 }
 
+function showDialogWord(){
+	if($("#windowAddW1").length==0){
+		$('body').append('<dialog id="windowAddW1" style="z-index:22;position:fixed;"><h3>Все слова в виде JSON [{"r":"Абрикос","e":"Apricot"},...]!</h3><p><textarea rows="10" style="width: 100%;" id="newWords1"></textarea></p><button id="butaddWords1">Ok</dialog><button id="butclosewindowAddW1">Отмена</dialog>');
+		$('#butclosewindowAddW1').on('click',function(){$("#windowAddW1")[0].close();});
+		$('#butaddWords1').on('click',function(){$("#windowAddW1")[0].close();});
+	}
+	$("#windowAddW1")[0].show();
+}
+
 function addWords(curentlib){
 	if(curentlib!=null && $(curentlib).length>0){
 	var elEx = $('.exampleEl').html();
@@ -219,7 +228,8 @@ function startlib(curentlib, settLib) {
 	
 	$('.fa-external-link').on('click', function () {
 		var d = JSON.stringify(getAllSelWords());
-		console.log(d);
+		showDialogWord()
+		$('#newWords1').val(d);
 	});
 	$('.fa-plus').on('click', function () {
 		console.log("call showDialogAddWord");
