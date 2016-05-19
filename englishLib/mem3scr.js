@@ -1,3 +1,19 @@
+var useword_rus={
+	allword:"Всего слов",
+	closeR:"Закрыто справа",
+	closeL:"Закрыто слево",
+	wordJSON:"Добавьте слова в виде",
+	add:"Добавить",
+	cancal:"Отмена",
+	allwords:"Все слова в виде",
+	checkoutSel:"Снять выделение.",
+	selAll:"Выделить все.",
+	showEng:' Показать английский',
+	hideEng:' Скрыть английский',
+	}
+
+var useword=useword_rus;
+
 jQuery.fn.shuffle = function () {
 		var allElems = this.get();
 		var getRandom = function (max) {
@@ -70,7 +86,7 @@ function startWorkCard() {
 	console.log('i did it');
 
 	if (prStr.statePr == "STATE_MENU") {
-		//здесь будет построение меню
+		//here will build menu
 		$('#main .node-form').prepend($('#edit-field-menu-0-value').val());
 		$('.lang-lg').parent().on('click',function(ev){console.log(ev);setLib($(ev.target).find('.lang-lg').attr('indLib')); return;});
 	} else {		
@@ -114,17 +130,17 @@ function closeOpenEl(el, dir){
 }
 
 function calculateWords(){
-	var txt="Всего слов: "+$(".wordsEl .row").length+"; ";
+	var txt=useword.allword+": "+$(".wordsEl .row").length+"; ";
 	var td=$(".wordsEl .input-group2.elclose").length;
-	if(td>0) txt+="Закрыто справа: "+td+"; ";
+	if(td>0) txt+=useword.closeR+": "+td+"; ";
 	td=$(".wordsEl .input-group.elclose").length;
-	if(td>0) txt+="Закрыто слево: "+td+"; ";
+	if(td>0) txt+=useword.closeL+": "+td+"; ";
 	$('.fa-info').attr('title',txt);
 }
 
 function showDialogAddWord(){
 	if($("#windowAddW").length==0){
-		$('body').append('<dialog id="windowAddW" style="z-index:22;position:fixed;"><h3>Добавьте слова в виде JSON [{"r":"Абрикос","e":"Apricot"},...]!</h3><p><textarea rows="10" style="width: 100%;" id="newWords"></textarea></p><button id="butaddWords">Добавить</dialog><button id="butclosewindowAddW">Отмена</dialog>');
+		$('body').append('<dialog id="windowAddW" style="z-index:22;position:fixed;"><h3>'+useword.wordJSON+' JSON [{"r":"Абрикос","e":"Apricot"},...]!</h3><p><textarea rows="10" style="width: 100%;" id="newWords"></textarea></p><button id="butaddWords">'+useword.add+'</dialog><button id="butclosewindowAddW">'+useword.cancal+'</dialog>');
 		$('#butclosewindowAddW').on('click',function(){$("#windowAddW")[0].close();});
 		$('#butaddWords').on('click',function(){var wordsEl = JSON.parse($('#newWords').val());if(wordsEl.length>0){addWords(wordsEl);};$("#windowAddW")[0].close();});
 	}
@@ -133,7 +149,7 @@ function showDialogAddWord(){
 
 function showDialogWord(){
 	if($("#windowAddW1").length==0){
-		$('body').append('<dialog id="windowAddW1" style="z-index:22;position:fixed;"><h3>Все слова в виде JSON [{"r":"Абрикос","e":"Apricot"},...]!</h3><p><textarea rows="10" style="width: 100%;" id="newWords1"></textarea></p><button id="butaddWords1">Ok</dialog><button id="butclosewindowAddW1">Отмена</dialog>');
+		$('body').append('<dialog id="windowAddW1" style="z-index:22;position:fixed;"><h3>'+useword.allwords+' JSON [{"r":"Абрикос","e":"Apricot"},...]!</h3><p><textarea rows="10" style="width: 100%;" id="newWords1"></textarea></p><button id="butaddWords1">Ok</dialog><button id="butclosewindowAddW1">'+useword.cancal+'</dialog>');
 		$('#butclosewindowAddW1').on('click',function(){$("#windowAddW1")[0].close();});
 		$('#butaddWords1').on('click',function(){$("#windowAddW1")[0].close();});
 	}
@@ -178,10 +194,10 @@ function addWords(curentlib){
 	$('.newheadline .checkSh').on('change', function () {
 		if ($('.checkSh:checked').length > 0) {
 			$('.shuffler input').prop("checked", "checked");
-			$('.shuffler label span').text("Снять выделение.");
+			$('.shuffler label span').text(useword.checkoutSel);
 		} else {
 			$('.shuffler input').prop("checked", "");
-			$('.shuffler label span').text("Выделить все.");
+			$('.shuffler label span').text(useword.sellAll);
 		}
 	});
 	
@@ -197,12 +213,12 @@ function startlib(curentlib, settLib) {
 	$('.hideEng').on('click', function () {
 		if ($('.hideEng .fa-angle-double-left').length > 0) {
 			$('.hideEng .fa-angle-double-left').removeClass('fa-angle-double-left').addClass('fa-angle-double-right');
-			$('.hideEng .txtF').text(' Показать английский');
+			$('.hideEng .txtF').text(useword.showEng);
 			$('.input-group').addClass('elclose').css('width', '1px');
 			$('.input-group .fa-arrow-left').removeClass('fa-arrow-left').addClass('fa-arrow-right');			
 		} else {
 			$('.hideEng .fa-angle-double-right').removeClass('fa-angle-double-right').addClass('fa-angle-double-left');
-			$('.hideEng .txtF').text(' Скрыть английский');
+			$('.hideEng .txtF').text(useword.hideEng);
 			$('.input-group').removeClass('elclose').css('width', ($('.hideEng').width() - $($('.wordcard')[0]).width() * 3) + 'px');
 			$('.input-group .fa-arrow-right').removeClass('fa-arrow-right').addClass('fa-arrow-left');			
 		}
@@ -211,10 +227,10 @@ function startlib(curentlib, settLib) {
 	$('.shuffler input').on('change', function () {
 		if ($('.checkSh:checked').length > 0) {
 			$('.checkSh:checked').prop("checked", "");
-			$('.shuffler label span').text("Выделить все.");
+			$('.shuffler label span').text(useword.selAll);
 		} else {
 			$('.checkSh').prop("checked", "checked");
-			$('.shuffler label span').text("Снять выделение.");
+			$('.shuffler label span').text(useword.checkoutSel);
 		}
 	});
 	
