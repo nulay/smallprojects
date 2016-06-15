@@ -69,29 +69,29 @@ function changeState(){
 }
 
 function startWorkCard() {	
-	if(document.URL.includes('/node/add/englishlib')){
+	if(document.URL.includes('/node/add/')){
 		$('#edit-title').val("My dictionary-"+new Date().getTime());
 		$('#edit-path').val("englishlib-"+new Date().getTime()+"-"+Math.floor(Math.random() * (1000 - 0 + 1)) + 0);		
 	}
 	
 	prStr=getState();
 
-	jQuery('#main').css({"z-index" : "20","position" : "absolute","background" : "white","left" : "0px","top" : "160px","padding" : "0px 75px 0px 75px","width":"100%"});
-
-	jQuery("#sidebar-left").hide();
-	jQuery('#node-form div.standard').hide();
-	jQuery('#node-form div.admin').hide();
-	jQuery('#edit-preview').hide();
-	jQuery('#main .tabs').hide();
+	$('#main').css({"z-index" : "20","position" : "absolute","background" : "white","left" : "0px","top" : "160px","padding" : "0px 75px 0px 75px","width":"100%"});
+    
+	$("#sidebar-left").hide();
+	$('#node-form div.standard').hide();
+	$('#node-form div.admin').hide();
+	$('#edit-preview').hide();
+	$('#main .tabs').hide();
+	
 	console.log('i did it');
-
 	if (prStr.statePr == "STATE_MENU") {
 		//here will build menu
 		$('#main .node-form').prepend($('#edit-field-menu-0-value').val());
-		$('.lang-lg').parent().on('click',function(ev){console.log(ev);setLib($(ev.target).find('.lang-lg').attr('indLib')); return;});
+		$('.lang-lg').on('click',function(ev){console.log(ev);setLib($(ev.target).attr('indlib')); return;});
 	} else {		
 		startlib(prStr.yoursLib[prStr.curentlib]);
-	}
+	}	
 }
 
 function setLib(indLib){
@@ -162,6 +162,9 @@ function addWords(curentlib){
 	var reReplacePatternRu = /rusword/g;
 	var reReplacePatternEn = /enword/g;
 	
+	//portable topic to up	
+	$('#node-form').prepend($('#edit-title-wrapper'));
+	
 	$(curentlib).each(function (ind, el) {		
 			if(el.r=='rusword') return true;
 			var t = elEx.replace(/rusword/g, el.r);
@@ -180,6 +183,8 @@ function addWords(curentlib){
 			}
 			t.addClass('newheadline');		
 	})
+	
+	
 	
 	$('.wordsEl .newheadline .input-group .fashowinput').on('click', function(ev){closeOpenEl($(ev.target),"r")});
 	$('.wordsEl .newheadline .input-group2 .fashowinput').on('click', function(ev){closeOpenEl($(ev.target),"l")});
